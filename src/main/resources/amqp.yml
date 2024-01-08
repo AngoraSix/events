@@ -1,0 +1,55 @@
+#spring:
+#  rabbitmq:
+#    host: ${A6_EVENTS_RABBITMQ_HOST:localhost}
+#    port: ${A6_EVENTS_RABBITMQ_PORT:5672}
+#    username: ${A6_EVENTS_RABBITMQ_USER:user}
+#    password: ${A6_EVENTS_RABBITMQ_PASSWORD:pass}
+#    virtual-host: ${A6_EVENTS_RABBITMQ_VHOST:/}
+
+# https://docs.spring.io/spring-cloud-stream/reference/rabbit/rabbit_overview/putting-it-all-together.html#page-title
+spring:
+  rabbitmq:
+    publisher-confirm-type: correlated
+#    publisher-confirms: true
+    publisher-returns: true
+  cloud:
+    stream:
+      output-bindings: events #;a6-dlx # we need explicit bindings bc we use StreamBridge
+      bindings:
+        events:
+          destination: ${A6_EVENTS_RABBITMQ_OUTPUT_EXCHANGE:a6-exchange} # existing exchange
+#          group: ${A6_EVENTS_RABBITMQ_OUTPUT_GROUP:group} # required for DLQ
+#          error-channel-enabled: true
+#          error-handler-definition: myErrorHandler
+#        a6-dlx:
+#          destination: ${A6_EVENTS_RABBITMQ_OUTPUT_EXCHANGE:a6-dlx} # existing exchange
+      rabbit:
+        bindings:
+          events:
+            producer:
+              autoBindDlq: false # true
+              auto-bind-dlq: false # true
+#              useConfirmHeader: true
+#              max-attempts: 1
+#              dlq-dead-letter-exchange: a6-dlx
+            consumer:
+              autoBindDlq: false
+              auto-bind-dlq: false
+#              max-attempts: 1
+#              dlq-ttl: 500
+#              dlq-dead-letter-exchange: a6-dlx
+#          a6-dlx:
+#            producer:
+#              autoBindDlq: false
+#              exchangeType: fanout
+      binders:
+        a6Rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: ${A6_NOTIFICATIONS_RABBITMQ_HOST:localhost}
+                port: ${A6_NOTIFICATIONS_RABBITMQ_PORT:5672}
+                username: ${A6_NOTIFICATIONS_RABBITMQ_USER:guest}
+                password: ${A6_NOTIFICATIONS_RABBITMQ_PASSWORD:guest}
+                virtual-host: ${A6_NOTIFICATIONS_RABBITMQ_VHOST:/}

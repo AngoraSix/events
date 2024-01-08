@@ -1,0 +1,16 @@
+context:
+  initializer:
+    classes: com.angorasix.events.BeansInitializer
+server:
+  port: ${A6_EVENTS_PORT:9087}
+
+spring:
+  config:
+    import: classpath:/api.yml, classpath:/security.yml, classpath:/function-streams.yml, classpath:/amqp.yml
+  application:
+    name: ${A6_EVENTS_APP_NAME:events}
+
+logging:
+  level:
+    org.springframework.cloud.stream: DEBUG
+    root: DEBUG

@@ -1,0 +1,7 @@
+#spring:
+#  cloud:
+#    stream:
+#      function:
+#        bindings:
+#          toStream:
+#            destination: ger-topic

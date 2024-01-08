@@ -1,0 +1,13 @@
+configs:
+  api:
+    basePaths:
+      events: "/events"
+    routes:
+      baseAdministeredResourceEventRoute: "/administered-resource"
+      administeredResourceEvent:
+        name: administeredResourceEvent
+        basePaths:
+          - ${configs.api.basePaths.events}
+          - ${configs.api.routes.baseAdministeredResourceEventRoute}
+        method: POST
+        path: ""
