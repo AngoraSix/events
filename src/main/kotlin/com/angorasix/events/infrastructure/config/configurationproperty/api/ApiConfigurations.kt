@@ -22,8 +22,8 @@ data class ApiConfigs(
 data class BasePathConfigs constructor(val events: String)
 
 data class RoutesConfigs constructor(
-    val baseAdministeredResourceEventRoute: String,
-    val administeredResourceEvent: Route,
+    val baseA6ResourceEventRoute: String,
+    val a6ResourceEvent: Route,
 )
 
 data class Route(

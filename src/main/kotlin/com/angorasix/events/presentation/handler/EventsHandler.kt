@@ -2,11 +2,10 @@ package com.angorasix.events.presentation.handler
 
 import com.angorasix.commons.domain.SimpleContributor
 import com.angorasix.commons.infrastructure.constants.AngoraSixInfrastructure
-import com.angorasix.commons.infrastructure.intercommunication.events.A6InfraEventDto
+import com.angorasix.commons.infrastructure.intercommunication.events.dto.A6InfraEventDto
 import com.angorasix.commons.reactive.presentation.error.resolveBadRequest
 import com.angorasix.events.application.EventsService
 import com.angorasix.events.domain.events.Event
-import com.angorasix.events.infrastructure.config.configurationproperty.api.ApiConfigs
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
@@ -16,22 +15,21 @@ import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.buildAndAwait
 
 /**
- * Project Handler (Controller) containing all handler functions related to Project endpoints.
+ * Events Handler (Controller) containing all handler functions related to Events endpoints.
  *
  * @author rozagerardo
  */
 class EventsHandler(
     private val eventsService: EventsService,
-    private val apiConfigs: ApiConfigs,
 ) {
 
     /**
-     * Handler for the List Projects endpoint, retrieving a Flux including all persisted Projects.
+     * Handler to receive an event affecting an A6 Resource, retrieving Accepted response.
      *
      * @param request - HTTP `ServerRequest` object
      * @return the `ServerResponse`
      */
-    suspend fun administeredResourceEvent(request: ServerRequest): ServerResponse {
+    suspend fun a6ResourceEvent(request: ServerRequest): ServerResponse {
         val requestingContributor =
             request.attributes()[AngoraSixInfrastructure.REQUEST_ATTRIBUTE_CONTRIBUTOR_KEY]
         return if (requestingContributor is SimpleContributor) {
@@ -44,21 +42,22 @@ class EventsHandler(
                     "Event",
                 )
             }
-            val admins =
-                request.attributes()[AngoraSixInfrastructure.REQUEST_ATTRIBUTE_RESOURCE_ADMINS_KEY]
-            return if (admins is List<*>) {
-                return if (eventsService.processAdministeredResourceEvent(
+            val affectedContributors =
+                request.attributes()[AngoraSixInfrastructure.REQUEST_ATTRIBUTE_AFFECTED_CONTRIBUTORS_KEY]
+            if (affectedContributors is List<*>) {
+                if (eventsService.processA6ResourceEvent(
                         event,
-                        admins.filterIsInstance<String>(),
+                        affectedContributors.filterIsInstance<String>(),
                         event.subjectId,
+                        requestingContributor,
                     )
                 ) {
-                    return accepted().buildAndAwait()
+                    accepted().buildAndAwait()
                 } else {
                     status(HttpStatus.SERVICE_UNAVAILABLE).buildAndAwait()
                 }
             } else {
-                resolveBadRequest("Incorrect Administered Resource Event body", "Event")
+                resolveBadRequest("Incorrect AngoraSix Resource Event body", "Event")
             }
         } else {
             resolveBadRequest("Invalid Contributor Token", "Contributor Token")
@@ -67,5 +66,4 @@ class EventsHandler(
 
     private fun A6InfraEventDto.convertToDomain(requestingContributor: SimpleContributor): Event =
         Event(subjectType, subjectId, subjectEvent, eventData, requestingContributor)
-
 }

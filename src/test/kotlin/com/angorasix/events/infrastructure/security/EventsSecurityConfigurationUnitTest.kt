@@ -6,7 +6,6 @@ import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
@@ -17,7 +16,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain
  *
  * @author rozagerardo
  */
-class ProjectSecurityConfigurationUnitTest {
+class EventsSecurityConfigurationUnitTest {
 
     @Test
     fun `when security configuration is created - then Jwt config is used`() {
@@ -25,6 +24,7 @@ class ProjectSecurityConfigurationUnitTest {
         val slot = slot<Customizer<ServerHttpSecurity.AuthorizeExchangeSpec>>()
         every { http.authorizeExchange(capture(slot)) } returns http
         every { http.oauth2ResourceServer(any()) } returns http
+        every { http.csrf(any()) } returns http
         val securityFilterChain = mockk<SecurityWebFilterChain>()
         every { http.build() } returns securityFilterChain
 
@@ -40,26 +40,11 @@ class ProjectSecurityConfigurationUnitTest {
         // assert inner config
         val capturedConfiguration = slot.captured
         val exchanges = mockk<ServerHttpSecurity.AuthorizeExchangeSpec>()
-        val mainAccess = mockk<ServerHttpSecurity.AuthorizeExchangeSpec.Access>()
-        every {
-            exchanges.pathMatchers(
-                HttpMethod.GET,
-                "/projects-core/**",
-            )
-        } returns mainAccess
-        every { mainAccess.permitAll() } returns exchanges
         val defaultAccess = mockk<ServerHttpSecurity.AuthorizeExchangeSpec.Access>()
         every { exchanges.anyExchange() } returns defaultAccess
         every { defaultAccess.authenticated() } returns exchanges
         capturedConfiguration.customize(exchanges)
 
-        verify {
-            exchanges.pathMatchers(
-                HttpMethod.GET,
-                "/projects-core/**",
-            )
-        }
-        verify { mainAccess.permitAll() }
         verify { exchanges.anyExchange() }
         verify { defaultAccess.authenticated() }
     }

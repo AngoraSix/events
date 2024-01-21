@@ -1,4 +1,4 @@
 = Angorasix - Events
 
-[[club-interested-contributor]]
-== POST Contributor Project Interest
+[[events/a6-resource]]
+== POST Process Event on AngoraSix Resource

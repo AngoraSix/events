@@ -8,9 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
  *
  * @author rozagerardo
  */
-@SpringBootTest(
-    properties = ["spring.data.mongodb.uri=mongodb://" + "\${embedded.mongodb.host}:\${embedded.mongodb.port}/" + "\${embedded.mongodb.database}"],
-)
+@SpringBootTest
 class EventsApplicationTest {
 
     @Test

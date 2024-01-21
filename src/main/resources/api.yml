@@ -3,11 +3,11 @@ configs:
     basePaths:
       events: "/events"
     routes:
-      baseAdministeredResourceEventRoute: "/administered-resource"
-      administeredResourceEvent:
-        name: administeredResourceEvent
+      baseA6ResourceEventRoute: "/a6-resource"
+      a6ResourceEvent:
+        name: a6ResourceEvent
         basePaths:
           - ${configs.api.basePaths.events}
-          - ${configs.api.routes.baseAdministeredResourceEventRoute}
+          - ${configs.api.routes.baseA6ResourceEventRoute}
         method: POST
         path: ""

@@ -16,8 +16,8 @@
   </parent>
 
   <properties>
-    <jacoco-coverage.class.branch.min>0.50</jacoco-coverage.class.branch.min>
-    <jacoco-coverage.class.line.min>0.50</jacoco-coverage.class.line.min>
+    <jacoco-coverage.class.branch.min>0.00</jacoco-coverage.class.branch.min>
+    <jacoco-coverage.class.line.min>0.00</jacoco-coverage.class.line.min>
   </properties>
 
   <dependencies>

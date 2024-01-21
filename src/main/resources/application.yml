@@ -6,11 +6,10 @@ server:
 
 spring:
   config:
-    import: classpath:/api.yml, classpath:/security.yml, classpath:/function-streams.yml, classpath:/amqp.yml
+    import: classpath:/api.yml, classpath:/security.yml, classpath:/amqp.yml
   application:
     name: ${A6_EVENTS_APP_NAME:events}
 
 logging:
   level:
-    org.springframework.cloud.stream: DEBUG
-    root: DEBUG
+    org.springframework.cloud.stream: ${A6_EVENTS_LOGGING_LEVEL_INFRA_STREAM:INFO}
