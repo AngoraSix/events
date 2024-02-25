@@ -1,5 +1,6 @@
 package com.angorasix.events.presentation.handler
 
+import com.angorasix.commons.domain.DetailedContributor
 import com.angorasix.commons.domain.SimpleContributor
 import com.angorasix.commons.infrastructure.constants.AngoraSixInfrastructure
 import com.angorasix.commons.infrastructure.intercommunication.events.dto.A6InfraEventDto
@@ -32,7 +33,7 @@ class EventsHandler(
     suspend fun a6ResourceEvent(request: ServerRequest): ServerResponse {
         val requestingContributor =
             request.attributes()[AngoraSixInfrastructure.REQUEST_ATTRIBUTE_CONTRIBUTOR_KEY]
-        return if (requestingContributor is SimpleContributor) {
+        return if (requestingContributor is DetailedContributor) {
             val event = try {
                 request.awaitBody<A6InfraEventDto>()
                     .convertToDomain(requestingContributor)

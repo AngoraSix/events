@@ -1,6 +1,6 @@
 package com.angorasix.events.application
 
-import com.angorasix.commons.domain.SimpleContributor
+import com.angorasix.commons.domain.DetailedContributor
 import com.angorasix.commons.infrastructure.intercommunication.A6DomainResource
 import com.angorasix.commons.infrastructure.intercommunication.messaging.dto.A6InfraMessageDto
 import com.angorasix.events.domain.events.Event
@@ -21,7 +21,7 @@ class EventsService(private val streamBridge: StreamBridge) {
         event: Event,
         affectedContributorsIds: List<String>,
         objectId: String,
-        requestingContributor: SimpleContributor,
+        requestingContributor: DetailedContributor,
     ): Boolean =
         affectedContributorsIds.map {
             streamBridge.send(
