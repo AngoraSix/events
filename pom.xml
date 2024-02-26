@@ -60,7 +60,7 @@
     <dependency>
       <artifactId>commons.core</artifactId>
       <groupId>com.angorasix</groupId>
-      <version>0.2.7</version>
+      <version>0.2.8</version>
     </dependency>
 
     <!-- test -->
