@@ -2,7 +2,7 @@ context:
   initializer:
     classes: com.angorasix.events.BeansInitializer
 server:
-  port: ${A6_EVENTS_PORT:9087}
+  port: ${A6_EVENTS_PORT:10101}
 
 spring:
   config:
