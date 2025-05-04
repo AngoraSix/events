@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest
  */
 @SpringBootTest
 class EventsApplicationTest {
-
     @Test
     fun contextLoads() {
         // empty block since we only want to test that the Context loads correctly

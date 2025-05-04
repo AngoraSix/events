@@ -1,9 +1,8 @@
 package com.angorasix.events.presentation.handler
 
-import com.angorasix.commons.domain.DetailedContributor
-import com.angorasix.commons.domain.SimpleContributor
+import com.angorasix.commons.domain.A6Contributor
 import com.angorasix.commons.infrastructure.constants.AngoraSixInfrastructure
-import com.angorasix.commons.infrastructure.intercommunication.events.dto.A6InfraEventDto
+import com.angorasix.commons.infrastructure.intercommunication.events.GatewayEventTriggered
 import com.angorasix.commons.reactive.presentation.error.resolveBadRequest
 import com.angorasix.events.application.EventsService
 import com.angorasix.events.domain.events.Event
@@ -23,7 +22,6 @@ import org.springframework.web.reactive.function.server.buildAndAwait
 class EventsHandler(
     private val eventsService: EventsService,
 ) {
-
     /**
      * Handler to receive an event affecting an A6 Resource, retrieving Accepted response.
      *
@@ -33,16 +31,18 @@ class EventsHandler(
     suspend fun a6ResourceEvent(request: ServerRequest): ServerResponse {
         val requestingContributor =
             request.attributes()[AngoraSixInfrastructure.REQUEST_ATTRIBUTE_CONTRIBUTOR_KEY]
-        return if (requestingContributor is DetailedContributor) {
-            val event = try {
-                request.awaitBody<A6InfraEventDto>()
-                    .convertToDomain(requestingContributor)
-            } catch (e: IllegalArgumentException) {
-                return resolveBadRequest(
-                    e.message ?: "Incorrect Event body",
-                    "Event",
-                )
-            }
+        return if (requestingContributor is A6Contributor) {
+            val event =
+                try {
+                    request
+                        .awaitBody<GatewayEventTriggered>()
+                        .convertToDomain(requestingContributor)
+                } catch (e: IllegalArgumentException) {
+                    return resolveBadRequest(
+                        e.message ?: "Incorrect Event body",
+                        "Event",
+                    )
+                }
             val affectedContributors =
                 request.attributes()[AngoraSixInfrastructure.REQUEST_ATTRIBUTE_AFFECTED_CONTRIBUTORS_KEY]
             if (affectedContributors is List<*>) {
@@ -65,6 +65,6 @@ class EventsHandler(
         }
     }
 
-    private fun A6InfraEventDto.convertToDomain(requestingContributor: SimpleContributor): Event =
+    private fun GatewayEventTriggered.convertToDomain(requestingContributor: A6Contributor): Event =
         Event(subjectType, subjectId, subjectEvent, eventData, requestingContributor)
 }

@@ -10,7 +10,7 @@ spring:
         bindings:
           events:
             producer:
-              autoBindDlq: false
+              republishToDlq: false
       binders:
         a6Rabbit:
           type: rabbit
