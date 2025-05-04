@@ -19,7 +19,9 @@ data class ApiConfigs(
     var basePaths: BasePathConfigs,
 )
 
-data class BasePathConfigs constructor(val events: String)
+data class BasePathConfigs constructor(
+    val events: String,
+)
 
 data class RoutesConfigs constructor(
     val baseA6ResourceEventRoute: String,
@@ -32,6 +34,5 @@ data class Route(
     val method: HttpMethod,
     val path: String,
 ) {
-
     fun resolvePath(): String = basePaths.joinToString("").plus(path)
 }

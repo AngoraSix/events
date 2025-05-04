@@ -1,6 +1,6 @@
 package com.angorasix.events.domain.events
 
-import com.angorasix.commons.domain.SimpleContributor
+import com.angorasix.commons.domain.A6Contributor
 
 /**
  * <p>
@@ -13,5 +13,5 @@ data class Event(
     val subjectId: String,
     val subjectEvent: String, // should match A6InfraTopics, not enforcing to avoid issues
     val eventData: Map<String, Any>,
-    val requestingContributor: SimpleContributor,
+    val requestingContributor: A6Contributor,
 )

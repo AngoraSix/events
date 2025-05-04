@@ -17,22 +17,22 @@ class EventsRouter(
     private val handler: EventsHandler,
     private val apiConfigs: ApiConfigs,
 ) {
-
     /**
      * Main RouterFunction configuration for all endpoints related to Events.
      *
      * @return the [RouterFunction] with all the routes for Events
      */
-    fun eventRouterFunction() = coRouter {
-        filter { request, next ->
-            extractRequestingContributor(request, next)
-        }
-        apiConfigs.basePaths.events.nest {
-            apiConfigs.routes.baseA6ResourceEventRoute.nest {
-                defineA6ResourceEventEndpoint()
+    fun eventRouterFunction() =
+        coRouter {
+            filter { request, next ->
+                extractRequestingContributor(request, next)
+            }
+            apiConfigs.basePaths.events.nest {
+                apiConfigs.routes.baseA6ResourceEventRoute.nest {
+                    defineA6ResourceEventEndpoint()
+                }
             }
         }
-    }
 
     private fun CoRouterFunctionDsl.defineA6ResourceEventEndpoint() {
         path(apiConfigs.routes.a6ResourceEvent.path).nest {
